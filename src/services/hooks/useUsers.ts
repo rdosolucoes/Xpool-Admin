@@ -42,7 +42,7 @@ export type UserData = {
 export async function signIn(login: string, password: string) {
   try {
     const response = await api.post<SignInResponse>(
-      `Auth/SignIn?login=${login}&password=${password}`
+      `User/SignIn?login=${login}&password=${password}`
     );
 
     return response.data;
@@ -58,7 +58,7 @@ export async function signIn(login: string, password: string) {
 export async function createUser(login: string, password: string) {
   try {
     const response = await api.post<SignInResponse>(
-      `Auth/Register?login=${login}&password=${password}`
+      `User/Register?login=${login}&password=${password}`
     );
 
     return response.data;
