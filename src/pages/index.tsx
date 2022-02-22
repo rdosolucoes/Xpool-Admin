@@ -1,4 +1,4 @@
-import { Flex, Button, Stack } from "@chakra-ui/react";
+import { Flex, Button, Stack,Heading, VStack } from "@chakra-ui/react";
 import { Input } from "../components/Form/Input";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -71,11 +71,22 @@ export default function SignIn() {
   };
 
   return (
+    
+    
     <Flex w="100vw" h="100vh" align="center" justify="center">
+      <Flex      
+        w="100%"
+        maxWidth={400}     
+        p="5"       
+        flexDirection="column"
+      >
+      <VStack align="center" p="5">
+      <Heading size="2xl" >XPool Admin</Heading>
+      </VStack>
       <Flex
         as="form"
         w="100%"
-        maxWidth={360}
+        maxWidth={400}
         bg="gray.800"
         p="8"
         borderRadius={8}
@@ -111,6 +122,7 @@ export default function SignIn() {
           Entrar
         </Button>
       </Flex>
+    </Flex>
     </Flex>
   );
 }
