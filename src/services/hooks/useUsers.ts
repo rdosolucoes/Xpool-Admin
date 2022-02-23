@@ -26,7 +26,7 @@ type SignInResponse = {
 export type UserData = {
   active: boolean;
   changeDate: string;
-  creationDate: string;
+  creationDateHour: string;
   id: number;
   login: string;
   partnerships?: null;
@@ -71,7 +71,7 @@ export async function createUser(login: string, password: string) {
 }
 
 export async function getUsers() {
-  const response = await api.get<UserData[]>("/User/FindAll");
+  const response = await api.get<UserData[]>("/User/GetAllUsers");
 
   return response.data;
 }

@@ -2,8 +2,8 @@ import { Stack } from "@chakra-ui/react";
 import {
   RiContactsLine,
   RiDashboardLine,
-  RiGitMergeLine,
-  RiInputMethodLine,
+  RiStore3Fill,
+  RiToolsFill,
   RiWalletLine
 } from "react-icons/ri";
 import { NavLink } from "./NavLink";
@@ -19,15 +19,13 @@ export function SidebarNav() {
         <NavLink icon={RiContactsLine} href="/users">
           Usuários
         </NavLink>
-        <NavLink icon={RiGitMergeLine} href="/users">
-         Lojistas
+        <NavLink icon={RiStore3Fill} href="/shops">
+         Lojas
         </NavLink>
-        <NavLink icon={RiInputMethodLine} href="/users">
+        <NavLink icon={RiToolsFill} href="/suppliers">
           Fornecedores
         </NavLink>
-        <NavLink icon={RiWalletLine} href="/users">
-         Financeiro
-        </NavLink>
+       
         
       </NavSection>
 

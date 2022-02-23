@@ -26,6 +26,7 @@ import {
   StatsIcon,
   PersonIcon,
   WalletIcon,
+  
 } from "../components/Icons/Icons.js";
 
 // Custom icons
