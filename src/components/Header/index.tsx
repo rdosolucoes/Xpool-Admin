@@ -4,9 +4,14 @@ import { useSidebarDrawer } from "../../contexts/SidebarDrawerContext";
 import { Logo } from "./Logo";
 import { NotificationsNav } from "./NotificationsNav";
 import { Profile } from "./Profile";
-// import { SearchBox } from "./SearchBox";
+import { SearchBox } from "./SearchBox";
 
-export function Header() {
+interface HeaderProps {
+  handleSearch?: (e?: string) => any;
+  search?: string;
+}
+
+export function Header({ handleSearch, search }: HeaderProps) {
   const { onOpen } = useSidebarDrawer();
 
   const isWideVersion = useBreakpointValue({ base: false, lg: true });
@@ -32,9 +37,12 @@ export function Header() {
           mr="2"
         />
       )}
+
       <Logo />
 
-      {/* {isWideVersion && <SearchBox />} */}
+      {isWideVersion && !!handleSearch && (
+        <SearchBox onChange={handleSearch} search={search} />
+      )}
 
       <Flex align="center" ml="auto">
         <NotificationsNav />

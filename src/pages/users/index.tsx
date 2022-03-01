@@ -11,16 +11,18 @@ import {
   Text,
   Th,
   Thead,
-  Tr,
-  useBreakpointValue,
+  Tr
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { RiAddLine, RiPencilLine } from "react-icons/ri";
+import { RiPencilLine } from "react-icons/ri";
 import { Header } from "../../components/Header";
 import { Sidebar } from "../../components/Sidebar";
+import useSearchBar from "../../hooks/useSearchBar";
 import { getUsers, isLogged, UserData } from "../../services/hooks/useUsers";
+
+const searchParams = ["login", "creationDateHour"];
 
 export default function UserList() {
   const router = useRouter();
@@ -28,10 +30,8 @@ export default function UserList() {
   const [error, setError] = useState(false);
   const [users, setUsers] = useState<UserData[]>([]);
 
-  const isWideVersion = useBreakpointValue({
-    base: false,
-    lg: true,
-  });
+  const { search, defaultSearchBarProps, filterBySearchBar } =
+    useSearchBar(searchParams);
 
   const loadData = async () => {
     setIsLoading(true);
@@ -53,9 +53,14 @@ export default function UserList() {
     loadData();
   }, []);
 
+  const filteredUsers = filterBySearchBar(users);
+
   return (
     <Box>
-      <Header />
+      <Header
+        search={search}
+        handleSearch={defaultSearchBarProps.handleSearch}
+      />
 
       <Flex width="100%" maxWidth={1480} my="6" mx="auto" px="6">
         <Sidebar />
@@ -66,7 +71,7 @@ export default function UserList() {
               Usuários
             </Heading>
 
-          {/*  <Link href="/users/create" passHref>
+            {/*  <Link href="/users/create" passHref>
               <Button
                 as="a"
                 size="sm"
@@ -89,17 +94,17 @@ export default function UserList() {
               <Text>Falha ao obter dados do usuários.</Text>
             </Flex>
           ) : (
-            <>
+            <Box overflowX="auto">
               <Table colorScheme="whiteAlpha">
                 <Thead>
                   <Tr>
                     <Th>Login</Th>
-                    {isWideVersion && <Th>Data de cadastro</Th>}
-                    {isWideVersion && <Th w="8"></Th>}
+                    <Th>Data de cadastro</Th>
+                    <Th w="8"></Th>
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {users.map((user) => {
+                  {filteredUsers.map((user) => {
                     return (
                       <Tr key={user.id}>
                         <Td>
@@ -107,30 +112,29 @@ export default function UserList() {
                             <Text fontWeight="bold">{user.login}</Text>
                           </Box>
                         </Td>
-                        {isWideVersion && <Td>{user.creationDateHour}</Td>}
-                        {isWideVersion && (
-                          <Td>
-                            <Link href={`/users/${user.id}`} passHref>
-                              <Button
-                                as="a"
-                                size="sm"
-                                fontSize="small"
-                                colorScheme="blackAlpha"
-                                leftIcon={
-                                  <Icon as={RiPencilLine} fontSize="16" />
-                                }
-                              >
-                                Editar
-                              </Button>
-                            </Link>
-                          </Td>
-                        )}
+                        <Td>{user.creationDateHour}</Td>
+
+                        <Td>
+                          <Link href={`/users/${user.id}`} passHref>
+                            <Button
+                              as="a"
+                              size="sm"
+                              fontSize="small"
+                              colorScheme="blackAlpha"
+                              leftIcon={
+                                <Icon as={RiPencilLine} fontSize="16" />
+                              }
+                            >
+                              Editar
+                            </Button>
+                          </Link>
+                        </Td>
                       </Tr>
                     );
                   })}
                 </Tbody>
               </Table>
-            </>
+            </Box>
           )}
         </Box>
       </Flex>
