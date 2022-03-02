@@ -11,17 +11,19 @@ import {
   Text,
   Th,
   Thead,
-  Tr,
-  useBreakpointValue,
+  Tr
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { RiAddLine, RiPencilLine } from "react-icons/ri";
+import { RiPencilLine } from "react-icons/ri";
 import { Header } from "../../components/Header";
 import { Sidebar } from "../../components/Sidebar";
+import useSearchBar from "../../hooks/useSearchBar";
 import { getSuppliers, SupplierData } from "../../services/hooks/useSuppliers";
 import { isLogged } from "../../services/hooks/useUsers";
+
+const searchParams = ["name", "city", "email", "login"];
 
 export default function SupplierList() {
   const router = useRouter();
@@ -29,10 +31,8 @@ export default function SupplierList() {
   const [error, setError] = useState(false);
   const [users, setUsers] = useState<SupplierData[]>([]);
 
-  const isWideVersion = useBreakpointValue({
-    base: false,
-    lg: true,
-  });
+  const { search, defaultSearchBarProps, filterBySearchBar } =
+    useSearchBar(searchParams);
 
   const loadData = async () => {
     setIsLoading(true);
@@ -54,9 +54,14 @@ export default function SupplierList() {
     loadData();
   }, []);
 
+  const filteredSuppliers = filterBySearchBar(users);
+
   return (
     <Box>
-      <Header />
+      <Header
+        search={search}
+        handleSearch={defaultSearchBarProps.handleSearch}
+      />
 
       <Flex width="100%" maxWidth={1480} my="6" mx="auto" px="6">
         <Sidebar />
@@ -66,7 +71,7 @@ export default function SupplierList() {
             <Heading size="lg" fontWeight="normal">
               Fornecedores
             </Heading>
-{/*
+            {/*
             <Link href="/suppliers/create" passHref>
               <Button
                 as="a"
@@ -90,19 +95,19 @@ export default function SupplierList() {
               <Text>Falha ao obter dados dos fornecedores.</Text>
             </Flex>
           ) : (
-            <>
+            <Box overflowX={"auto"}>
               <Table colorScheme="whiteAlpha">
                 <Thead>
                   <Tr>
                     <Th>Nome</Th>
                     <Th>Cidade</Th>
-                    {isWideVersion && <Th>Email</Th>}
-                    {isWideVersion && <Th>Login</Th>}
-                    {isWideVersion && <Th w="8"></Th>}
+                    <Th>Email</Th>
+                    <Th>Login</Th>
+                    <Th w="8"></Th>
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {users.map((user) => {
+                  {filteredSuppliers.map((user) => {
                     return (
                       <Tr key={user.id}>
                         <Td>
@@ -110,32 +115,31 @@ export default function SupplierList() {
                             <Text fontWeight="bold">{user.name}</Text>
                           </Box>
                         </Td>
-                        {isWideVersion && <Td>{user.city}</Td>}
-                        {isWideVersion && <Td>{user.email}</Td>}
-                        {isWideVersion && <Td>{user.login}</Td>}
-                        {isWideVersion && (
-                          <Td>
-                            <Link href={`/suppliers/${user.id}`} passHref>
-                              <Button
-                                as="a"
-                                size="sm"
-                                fontSize="small"
-                                colorScheme="blackAlpha"
-                                leftIcon={
-                                  <Icon as={RiPencilLine} fontSize="16" />
-                                }
-                              >
-                                Editar
-                              </Button>
-                            </Link>
-                          </Td>
-                        )}
+                        <Td>{user.city}</Td>
+                        <Td>{user.email}</Td>
+                        <Td>{user.login}</Td>
+
+                        <Td>
+                          <Link href={`/suppliers/${user.id}`} passHref>
+                            <Button
+                              as="a"
+                              size="sm"
+                              fontSize="small"
+                              colorScheme="blackAlpha"
+                              leftIcon={
+                                <Icon as={RiPencilLine} fontSize="16" />
+                              }
+                            >
+                              Editar
+                            </Button>
+                          </Link>
+                        </Td>
                       </Tr>
                     );
                   })}
                 </Tbody>
               </Table>
-            </>
+            </Box>
           )}
         </Box>
       </Flex>
