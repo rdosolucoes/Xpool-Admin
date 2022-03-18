@@ -36,6 +36,9 @@ import { Header } from "../components/Header";
 import { PageLoader } from "../components/PageLoader/PageLoader";
 import { Sidebar } from "../components/Sidebar";
 import { isLogged } from "../services/hooks/useUsers";
+import { getSuppliers, SupplierData } from "../services/hooks/useSuppliers";
+import { getShops, ShopData } from "../services/hooks/useShops";
+import { getUsers, UserData } from "../services/hooks/useUsers";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -43,11 +46,29 @@ export default function Dashboard() {
   const iconTeal = useColorModeValue("teal.300", "teal.300");
   const iconBoxInside = useColorModeValue("white", "white");
   const textColor = useColorModeValue("gray.700", "white");
+  const [totalSup, setTotalSup] = useState(0);
+  const [totalShop, setTotalShop] = useState(0);
+  const [totalUser, setTotalUser] = useState(0);
 
+  var totalSuppliers = 0;
+
+
+  const loadData = async () => {
+    const getListSuppliers = await getSuppliers();
+    const getListUsers = await getUsers();
+    const getListShop = await getShops();
+
+    setTotalSup(getListSuppliers.length);
+    setTotalShop(getListShop.length);
+    setTotalUser(getListUsers.length);
+  };
+ 
   useEffect(() => {
+    loadData();
     setScreenLoading(true);
 
     const session = isLogged();
+    
 
     if (!session) router.push("/");
 
@@ -76,7 +97,7 @@ export default function Dashboard() {
                   <StatLabel color="gray.400" fontWeight="bold">
                     Usuários
                   </StatLabel>
-                  <StatNumber color={textColor} fontSize="md">10</StatNumber>
+                  <StatNumber color={textColor} fontSize="x-large">{totalUser}</StatNumber>
                 </Stat>
 
                 <IconBox as="box" h={"55px"} w={"55px"} bg={iconTeal}>
@@ -97,7 +118,7 @@ export default function Dashboard() {
                   <StatLabel color="gray.400" fontWeight="bold">
                     Lojistas
                   </StatLabel>
-                  <StatNumber color={textColor} fontSize="lg">7</StatNumber>
+                  <StatNumber color={textColor} fontSize="x-large">{totalShop}</StatNumber>
                 </Stat>
 
                 <IconBox as="box" h={"55px"} w={"55px"} bg={iconTeal}>
@@ -118,7 +139,7 @@ export default function Dashboard() {
                   <StatLabel color="gray.400" fontWeight="bold">
                     Fornecedores
                   </StatLabel>
-                  <StatNumber color={textColor} fontSize="lg">3</StatNumber>
+                  <StatNumber color={textColor} fontSize="x-large">{totalSup}</StatNumber>
                 </Stat>
 
                 <IconBox as="box" h={"55px"} w={"55px"} bg={iconTeal}>
@@ -139,7 +160,7 @@ export default function Dashboard() {
                   <StatLabel color="gray.400" fontWeight="bold">
                     Faturamento
                   </StatLabel>
-                  <StatNumber color={textColor} fontSize="lg"  >R$ 150,00</StatNumber>
+                  <StatNumber color={textColor} fontSize="x-large"  >150,00</StatNumber>
                 </Stat>
 
                 <IconBox as="box" h={"55px"} w={"55px"} bg={iconTeal}>

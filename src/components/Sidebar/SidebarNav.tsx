@@ -25,6 +25,9 @@ export function SidebarNav() {
         <NavLink icon={RiToolsFill} href="/suppliers">
           Fornecedores
         </NavLink>
+        <NavLink icon={RiWalletLine} href="/finances">
+          Financeiro
+        </NavLink>
        
         
       </NavSection>

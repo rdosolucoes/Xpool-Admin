@@ -20,14 +20,14 @@ import { useEffect, useState } from "react";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
 import { Header } from "../../components/Header";
 import { Sidebar } from "../../components/Sidebar";
-import { getSuppliers, SupplierData } from "../../services/hooks/useSuppliers";
+import { getTransactions, TransactionData } from "../../services/hooks/useFinances";
 import { isLogged } from "../../services/hooks/useUsers";
 
 export default function SupplierList() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [users, setUsers] = useState<SupplierData[]>([]);
+  const [trans, setTrans] = useState<TransactionData[]>([]);
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -41,10 +41,9 @@ export default function SupplierList() {
 
     if (!session) router.push("/");
 
-    const getListSuppliers = await getSuppliers();
+    const getListTransactions = await getTransactions();
 
-
-    setUsers(getListSuppliers);
+    setTrans(getListTransactions);
 
     setTimeout(() => {
       setIsLoading(false);
@@ -65,21 +64,8 @@ export default function SupplierList() {
         <Box flex="1" borderRadius={8} bg="gray.800" p="8">
           <Flex mb="8" justify="space-between" align="center">
             <Heading size="lg" fontWeight="normal">
-              Fornecedores
+              Transações Financeiras
             </Heading>
-{/*
-            <Link href="/suppliers/create" passHref>
-              <Button
-                as="a"
-                size="sm"
-                fontSize="small"
-                colorScheme="blue"
-                backgroundColor="blue.700"
-                leftIcon={<Icon as={RiAddLine} fontSize="20" />}
-              >
-                Criar novo
-              </Button>
-</Link> */}
           </Flex>
 
           {isLoading ? (
@@ -88,49 +74,35 @@ export default function SupplierList() {
             </Flex>
           ) : error ? (
             <Flex justify="center">
-              <Text>Falha ao obter dados dos fornecedores.</Text>
+              <Text>Falha ao obter dados das transações.</Text>
             </Flex>
           ) : (
             <>
               <Table colorScheme="whiteAlpha">
                 <Thead>
                   <Tr>
-                    <Th>Nome</Th>
-                    <Th>Cidade</Th>
-                    {isWideVersion && <Th>Email</Th>}
-                    {isWideVersion && <Th>Login</Th>}
-                    {isWideVersion && <Th w="8"></Th>}
+                    <Th>Fornecedor</Th>
+                    <Th>Valor</Th>
+                    {isWideVersion && <Th>Tipo</Th>}
+                    {isWideVersion && <Th>Loja</Th>}
+                    {isWideVersion && <Th>Data</Th>}
+                    {isWideVersion && <Th>Status</Th>}
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {users.map((user) => {
+                  {trans.map((trans) => {
                     return (
-                      <Tr key={user.id}>
+                      <Tr key={trans.id}>
                         <Td>
                           <Box>
-                            <Text fontWeight="bold">{user.name}</Text>
+                            <Text fontWeight="bold">{trans.supplier}</Text>
                           </Box>
                         </Td>
-                        {isWideVersion && <Td>{user.city}</Td>}
-                        {isWideVersion && <Td>{user.email}</Td>}
-                        {isWideVersion && <Td>{user.login}</Td>}
-                        {isWideVersion && (
-                          <Td>
-                            <Link href={`/suppliers/${user.id}`} passHref>
-                              <Button
-                                as="a"
-                                size="sm"
-                                fontSize="small"
-                                colorScheme="blackAlpha"
-                                leftIcon={
-                                  <Icon as={RiPencilLine} fontSize="16" />
-                                }
-                              >
-                                Editar
-                              </Button>
-                            </Link>
-                          </Td>
-                        )}
+                        {isWideVersion && <Td>{trans.amount.toFixed(2)}</Td>}
+                        {isWideVersion && <Td>{trans.type}</Td>}
+                        {isWideVersion && <Td>{trans.shop}</Td>}
+                        {isWideVersion && <Td>{trans.formatDate}</Td>}
+                        {isWideVersion && <Td>{trans.status}</Td>}
                       </Tr>
                     );
                   })}
