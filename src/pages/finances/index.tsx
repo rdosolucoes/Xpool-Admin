@@ -22,6 +22,9 @@ import { Header } from "../../components/Header";
 import { Sidebar } from "../../components/Sidebar";
 import { getTransactions, TransactionData } from "../../services/hooks/useFinances";
 import { isLogged } from "../../services/hooks/useUsers";
+import useSearchBar from "../../hooks/useSearchBar";
+
+const searchParams = ["supplier", "type", "shop", "formatDate"]
 
 export default function SupplierList() {
   const router = useRouter();
@@ -33,6 +36,9 @@ export default function SupplierList() {
     base: false,
     lg: true,
   });
+
+  const { search, defaultSearchBarProps, filterBySearchBar } =
+  useSearchBar(searchParams);
 
   const loadData = async () => {
     setIsLoading(true);
@@ -54,9 +60,14 @@ export default function SupplierList() {
     loadData();
   }, []);
 
+  const filteredTrans = filterBySearchBar(trans);
+
   return (
     <Box>
-      <Header />
+      <Header
+        search={search}
+        handleSearch={defaultSearchBarProps.handleSearch}
+      />
 
       <Flex width="100%" maxWidth={1480} my="6" mx="auto" px="6">
         <Sidebar />
@@ -90,7 +101,7 @@ export default function SupplierList() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {trans.map((trans) => {
+                  {filteredTrans.map((trans) => {
                     return (
                       <Tr key={trans.id}>
                         <Td>

@@ -4,7 +4,8 @@ import {
   RiDashboardLine,
   RiStore3Fill,
   RiToolsFill,
-  RiWalletLine
+  RiWalletLine,
+  RiSettings2Fill
 } from "react-icons/ri";
 import { NavLink } from "./NavLink";
 import { NavSection } from "./NavSection";
@@ -27,6 +28,9 @@ export function SidebarNav() {
         </NavLink>
         <NavLink icon={RiWalletLine} href="/finances">
           Financeiro
+        </NavLink>
+        <NavLink icon={RiSettings2Fill} href="/params">
+          Configuração
         </NavLink>
        
         

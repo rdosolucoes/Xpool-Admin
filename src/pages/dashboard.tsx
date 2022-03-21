@@ -26,7 +26,8 @@ import {
   StatsIcon,
   PersonIcon,
   WalletIcon,
-  
+  MoneyIcon,
+  MoneyIcon2 
 } from "../components/Icons/Icons.js";
 
 // Custom icons
@@ -36,9 +37,7 @@ import { Header } from "../components/Header";
 import { PageLoader } from "../components/PageLoader/PageLoader";
 import { Sidebar } from "../components/Sidebar";
 import { isLogged } from "../services/hooks/useUsers";
-import { getSuppliers, SupplierData } from "../services/hooks/useSuppliers";
-import { getShops, ShopData } from "../services/hooks/useShops";
-import { getUsers, UserData } from "../services/hooks/useUsers";
+import { getDashboard, DashBoardData } from "../services/hooks/useDashBoard";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -49,18 +48,24 @@ export default function Dashboard() {
   const [totalSup, setTotalSup] = useState(0);
   const [totalShop, setTotalShop] = useState(0);
   const [totalUser, setTotalUser] = useState(0);
+  const [totalCash, setTotalCash] = useState(0);
+  const [totalReferences, setTotalReferences] = useState(0);
+  const [totalTransfer, setTotalTransfer] = useState(0);
+  const [totalGain, setTotalGain] = useState(0);
 
   var totalSuppliers = 0;
 
 
   const loadData = async () => {
-    const getListSuppliers = await getSuppliers();
-    const getListUsers = await getUsers();
-    const getListShop = await getShops();
+    const getValues = await getDashboard();
 
-    setTotalSup(getListSuppliers.length);
-    setTotalShop(getListShop.length);
-    setTotalUser(getListUsers.length);
+    setTotalSup(getValues.totalSuppliers);
+    setTotalShop(getValues.totalShops);
+    setTotalUser(getValues.totalUsers);
+    setTotalReferences(getValues.totalReferences);
+    setTotalCash(getValues.totalCash);
+    setTotalTransfer(getValues.totalTransfer);
+    setTotalGain(getValues.totalGain);
   };
  
   useEffect(() => {
@@ -84,7 +89,7 @@ export default function Dashboard() {
       <Header />
       <Flex width="100%" my="4" px="6">
         <Sidebar />
-        <SimpleGrid columns={{ sm: 1, md: 2, xl: 5 }} spacing="26px" w="100%">
+        <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="10px" w="100%" h="10%">
           <Card minH="70px">
             <CardBody>
               <Flex
@@ -94,13 +99,14 @@ export default function Dashboard() {
                 w="100%"
               >
                 <Stat>
-                  <StatLabel color="gray.400" fontWeight="bold">
+                <StatNumber color={textColor} fontSize="22">{totalUser}</StatNumber>
+                  <StatLabel color="gray.400" fontWeight="bold" fontSize="14">
                     Usuários
                   </StatLabel>
-                  <StatNumber color={textColor} fontSize="x-large">{totalUser}</StatNumber>
+                 
                 </Stat>
 
-                <IconBox as="box" h={"55px"} w={"55px"} bg={iconTeal}>
+                <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal}>
                   <PersonIcon h={"24px"} w={"24px"} color={iconBoxInside} />
                 </IconBox>
               </Flex>
@@ -115,13 +121,13 @@ export default function Dashboard() {
                 w="100%"
               >
                 <Stat>
-                  <StatLabel color="gray.400" fontWeight="bold">
+                <StatNumber color={textColor} fontSize="22">{totalShop}</StatNumber>
+               
+                  <StatLabel color="gray.400" fontWeight="bold" fontSize="14">
                     Lojistas
                   </StatLabel>
-                  <StatNumber color={textColor} fontSize="x-large">{totalShop}</StatNumber>
-                </Stat>
-
-                <IconBox as="box" h={"55px"} w={"55px"} bg={iconTeal}>
+                  </Stat>
+                <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal}>
                   <GlobeIcon h={"24px"} w={"24px"} color={iconBoxInside} />
                 </IconBox>
               </Flex>
@@ -136,13 +142,35 @@ export default function Dashboard() {
                 w="100%"
               >
                 <Stat>
-                  <StatLabel color="gray.400" fontWeight="bold">
+                <StatNumber color={textColor} fontSize="22">{totalSup}</StatNumber>
+                  <StatLabel color="gray.400" fontWeight="bold" fontSize="14">
                     Fornecedores
                   </StatLabel>
-                  <StatNumber color={textColor} fontSize="x-large">{totalSup}</StatNumber>
+                 
                 </Stat>
 
-                <IconBox as="box" h={"55px"} w={"55px"} bg={iconTeal}>
+                <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal}>
+                  <CartIcon h={"24px"} w={"24px"} color={iconBoxInside} />
+                </IconBox>
+              </Flex>
+            </CardBody>
+          </Card>
+          <Card minH="70px">
+            <CardBody>
+            <Flex
+                flexDirection="row"
+                align="start"
+                justify="start"
+                w="100%"
+              >
+                <Stat>
+                <StatNumber color={textColor} fontSize="22"  >{totalReferences}</StatNumber>
+                  <StatLabel color="gray.400" fontWeight="bold" fontSize="14">
+                    Indicações
+                  </StatLabel>           
+                </Stat>
+
+                <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal}>
                   <StatsIcon h={"24px"} w={"24px"} color={iconBoxInside} />
                 </IconBox>
               </Flex>
@@ -157,14 +185,56 @@ export default function Dashboard() {
                 w="100%"
               >
                 <Stat>
-                  <StatLabel color="gray.400" fontWeight="bold">
-                    Faturamento
-                  </StatLabel>
-                  <StatNumber color={textColor} fontSize="x-large"  >150,00</StatNumber>
+                <StatNumber color={textColor} fontSize="22"  >{totalCash.toFixed(2)}</StatNumber>
+                  <StatLabel color="gray.400" fontWeight="bold" fontSize="14">
+                    Caixa(R$)
+                  </StatLabel>                 
                 </Stat>
 
-                <IconBox as="box" h={"55px"} w={"55px"} bg={iconTeal}>
+                <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal}>
                   <WalletIcon h={"24px"} w={"24px"} color={iconBoxInside} />
+                </IconBox>
+              </Flex>
+            </CardBody>
+          </Card>
+          <Card minH="70px">
+            <CardBody>
+            <Flex
+                flexDirection="row"
+                align="start"
+                justify="start"
+                w="100%"
+              >
+                <Stat>
+                <StatNumber color={textColor} fontSize="22"  >{totalTransfer.toFixed(2)}</StatNumber>
+                  <StatLabel color="gray.400" fontWeight="bold" fontSize="14">
+                    Repasse(R$)
+                  </StatLabel>                 
+                </Stat>
+
+                <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal}>
+                  <MoneyIcon2 h={"24px"} w={"24px"} color={iconBoxInside} />
+                </IconBox>
+              </Flex>
+            </CardBody>
+          </Card>
+          <Card minH="70px">
+            <CardBody>
+            <Flex
+                flexDirection="row"
+                align="start"
+                justify="start"
+                w="100%"
+              >
+                <Stat>
+                <StatNumber color={textColor} fontSize="22"  >{totalGain.toFixed(2)}</StatNumber>
+                  <StatLabel color="gray.400" fontWeight="bold" fontSize="14">
+                    Lucro(R$)
+                  </StatLabel>                 
+                </Stat>
+
+                <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal}>
+                  <MoneyIcon h={"24px"} w={"24px"} color={iconBoxInside} />
                 </IconBox>
               </Flex>
             </CardBody>
@@ -196,7 +266,7 @@ export default function Dashboard() {
                   Usuários
                 </StatLabel>
                 <Flex>
-                  <StatNumber fontSize="x-large" color={textColor} alignItems="end">
+                  <StatNumber fontSize="22" color={textColor} alignItems="end">
                     25
                   </StatNumber>
                   
